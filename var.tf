@@ -8,3 +8,4 @@ default = "3yWz3kVaZsLn9zbYxFwmqSv2WpXra931GaVMfDTh"
 
 variable "region"{
 default = "us-east-2"  
+}
