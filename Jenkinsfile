@@ -21,7 +21,7 @@ pipeline {
                  script{
                         dir("terraform")
                         {
-                            git "https://github.com/malar1995/Terraform_repo_class.git"
+                            git "https://github.com/troy-ingram/week-24-project.git"
                         }
                     }
                 }
@@ -52,3 +52,39 @@ pipeline {
                 }
            }
            
+                
+            
+
+           steps {
+               script {
+                    def plan = readFile 'tfplan.txt'
+                    input message: "Do you want to apply the plan?",
+                    parameters: [text(name: 'Plan', description: 'Please review the plan', defaultValue: plan)]
+               }
+           }
+       }
+
+        stage('Apply') {
+            when {
+                not {
+                    equals expected: true, actual: params.destroy
+                }
+            }
+            
+            steps {
+                sh "terraform apply -input=false tfplan"
+            }
+        }
+        
+        stage('Destroy') {
+            when {
+                equals expected: true, actual: params.destroy
+            }
+        
+        steps {
+           sh "terraform destroy --auto-approve"
+        }
+    }
+
+  }
+}
